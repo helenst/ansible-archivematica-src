@@ -54,6 +54,8 @@
     - "rsync"
     - "uwsgi"
     - "uwsgi-plugin-python"
+    - "gnupg"
+    - "rng-tools"
   tags: "amsrc-ss-osdep"
 
 - name: "Install archivematica-storage-service additional package dependencies"
@@ -71,6 +73,18 @@
     - "gettext"
   tags: "amsrc-ss-osdep"
 
+- name: "Configure rng-tools"
+  lineinfile:
+    dest: "/etc/default/rng-tools"
+    line: "HRNGDEVICE=/dev/urandom"
+    insertafter: "^#HRNGDEVICE"
+    state: "present"
+  tags: "rng-tools"
+  become: "yes"
+
+- name: "Start rng-tools"
+  command: "/etc/init.d/rng-tools start"
+  tags: "rng-tools"
 
 ###########################################################
 #   2- Python dependencies (pip packages)
